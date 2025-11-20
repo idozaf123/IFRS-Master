@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFRS Mentor - סייען לימודי IFRS/IAS</title>
+  <style>
+    :root {
+      --bg: #e8edf2;
+      --panel: #eef3f8;
+      --shadow-light: rgba(255, 255, 255, 0.8);
+      --shadow-dark: rgba(163, 177, 198, 0.6);
+      --text-main: #2e3645;
+      --accent: #0b7285;
+      --accent-2: #1c7ed6;
+      --radius: 18px;
+      --transition: 220ms ease;
+      font-family: 'Segoe UI', 'Heebo', 'Arial', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+    }
+
+    .app-shell {
+      width: min(1200px, 100%);
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: 14px 14px 28px var(--shadow-dark),
+        -14px -14px 28px var(--shadow-light);
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #b2f2bb, #d0ebff);
+      box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.05),
+        inset -6px -6px 12px rgba(255, 255, 255, 0.9),
+        8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #0b7285;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .sub {
+      margin: 2px 0 0;
+      color: #4c5c70;
+      font-size: 0.95rem;
+    }
+
+    .pill {
+      padding: 10px 16px;
+      border-radius: 30px;
+      background: var(--panel);
+      box-shadow: 8px 8px 14px var(--shadow-dark),
+        -8px -8px 14px var(--shadow-light);
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      color: #2f4256;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .pill span {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: 10px 10px 20px var(--shadow-dark),
+        -10px -10px 20px var(--shadow-light);
+      padding: 16px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+
+    .prompt-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .prompt-card button {
+      width: 100%;
+      border: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--panel);
+      color: #1f2c3d;
+      text-align: right;
+      cursor: pointer;
+      box-shadow: 8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .prompt-card button:hover {
+      transform: translateY(-2px);
+      box-shadow: 12px 12px 20px var(--shadow-dark),
+        -12px -12px 20px var(--shadow-light);
+    }
+
+    .prompt-card button:active {
+      transform: translateY(0);
+      box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.08),
+        inset -8px -8px 16px rgba(255, 255, 255, 0.9);
+    }
+
+    .bullet {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #63e6be, #1c7ed6);
+      margin-left: 8px;
+    }
+
+    .chat-wrapper {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 12px;
+      min-height: 540px;
+    }
+
+    .transcript {
+      overflow-y: auto;
+      padding: 12px;
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.05),
+        inset -8px -8px 16px rgba(255, 255, 255, 0.9);
+      display: grid;
+      gap: 12px;
+    }
+
+    .msg {
+      padding: 12px 14px;
+      border-radius: 12px;
+      max-width: 90%;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .msg.user {
+      justify-self: end;
+      background: linear-gradient(145deg, #e3f2ff, #c2e0ff);
+      box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.08),
+        -8px -8px 16px rgba(255, 255, 255, 0.85);
+    }
+
+    .msg.bot {
+      justify-self: start;
+      background: linear-gradient(145deg, #f7f9fc, #e1e9f0);
+      box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.06),
+        -8px -8px 16px rgba(255, 255, 255, 0.9);
+      border-right: 4px solid #74c0fc;
+    }
+
+    .msg strong {
+      color: var(--accent);
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: var(--panel);
+      padding: 12px;
+      border-radius: var(--radius);
+      box-shadow: 8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light);
+    }
+
+    textarea {
+      width: 100%;
+      border: none;
+      resize: vertical;
+      min-height: 70px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--text-main);
+      font-size: 1rem;
+      box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.05),
+        inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+      outline: none;
+    }
+
+    button.send {
+      padding: 14px 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #74c0fc, #4dabf7);
+      color: #0b2942;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 120px;
+      box-shadow: 10px 10px 16px rgba(0, 0, 0, 0.08),
+        -8px -8px 16px rgba(255, 255, 255, 0.9);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    button.send:hover {
+      transform: translateY(-1px);
+      box-shadow: 14px 14px 20px rgba(0, 0, 0, 0.12),
+        -10px -10px 20px rgba(255, 255, 255, 0.95);
+    }
+
+    button.send:active {
+      transform: translateY(0);
+      box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.12),
+        inset -8px -8px 16px rgba(255, 255, 255, 0.9);
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #516174;
+      margin-top: 4px;
+    }
+
+    .tagline {
+      padding: 12px 14px;
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.05),
+        inset -8px -8px 16px rgba(255, 255, 255, 0.9);
+      display: grid;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .tagline strong {
+      color: var(--accent-2);
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #edf2ff, #e0f4ff);
+      color: #1c3553;
+      font-weight: 600;
+      box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.06),
+        -6px -6px 12px rgba(255, 255, 255, 0.9);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" aria-live="polite">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">IF</div>
+        <div>
+          <h1>IFRS Mentor – סייען לימודי</h1>
+          <p class="sub">הסברים עמוקים, דוגמאות חישוביות ויישום בפועל של תקני IFRS/IAS.</p>
+        </div>
+      </div>
+      <div class="pill" title="מודגש על אמינות ומקורות סטנדרטים">
+        <span><span class="bullet"></span> לשימוש לימודי • עברית כברירת מחדל</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="card prompt-card" aria-label="השראות מהירות">
+        <h2>התחלות מהירות</h2>
+        <ul>
+          <li><button data-prompt="הסבר עמוק על IAS 16: מדידה ראשונית, עלויות שאינן היווניות, ודוגמה מספרית להיוון עלויות.">IAS 16 – רכוש קבוע והיוון עלויות</button></li>
+          <li><button data-prompt="IAS 38: מתי להכיר בנכס בלתי מוחשי, ומה ההבדל בין מחקר לפיתוח? דוגמה עם מספרים.">IAS 38 – נכסים בלתי מוחשיים</button></li>
+          <li><button data-prompt="IFRS 15: 5 השלבים, זיהוי חבילות ביצוע וחלוקת התמורה. דוגמה עם הנחה והכרה לאורך זמן.">IFRS 15 – הכנסות ממכירות</button></li>
+          <li><button data-prompt="IFRS 16: איך לחשב חבות שכירות בערך נוכחי? תרחיש עם מקדמה, תשלום שנתי וריבית מובנית.">IFRS 16 – חכירות וחבות</button></li>
+          <li><button data-prompt="IAS 12: מסים נדחים – בניית לוח הפרשים זמניים, חישוב מס נדחה והצגה בדוחות.">IAS 12 – מסים נדחים</button></li>
+        </ul>
+      </section>
+
+      <section class="card chat" aria-label="שיחה עם הסייען">
+        <div class="chat-wrapper">
+          <div class="transcript" id="transcript" aria-live="polite">
+            <div class="msg bot">
+              <strong>ברוכים הבאים! </strong>אני עוזר לימודי IFRS/IAS. כתבו שאלה בעברית ותקבלו הסבר קונספטואלי,
+              דוגמה מספרית, בדיקות הכרה/מדידה, ורמזים לפקודות יומן נפוצות. אם חסר מידע – אציין זאת במפורש.
+            </div>
+          </div>
+
+          <div class="input-row">
+            <textarea id="userInput" placeholder="לדוגמה: \"איך מחשבים ריבית מובנית ב-IFRS 16 כשיש מקדמה?\""></textarea>
+            <button class="send" id="sendBtn">שליחה ↗</button>
+          </div>
+          <p class="note">שימוש אמיתי: הזינו מפתח OpenAI (client-side בלבד), בחרו מודל ולחצו "שמירת מפתח". במחשב משותף מחקו את הנתון מהדפדפן.</p>
+        </div>
+      </section>
+    </main>
+
+    <section class="card tagline" aria-label="מידע נוסף והנחיות">
+      <div><strong>איך זה עובד?</strong> כל תשובה בנויה מ-4 שכבות: (1) תמצית התקן הרלוונטי, (2) תסריט חישובי עם מספרים, (3) בדיקות הכרה/סיווג, (4) אזהרות נפוצות במבחנים.</div>
+      <div class="badges">
+        <span class="badge">כיוון ברירת מחדל: עברית</span>
+        <span class="badge">בהירות וציות לסטנדרטים</span>
+        <span class="badge">דוגמאות מספריות מלאות</span>
+        <span class="badge">ניתוח חשבונות והפרשות</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const transcript = document.getElementById('transcript');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Minimal inline controls for API configuration
+    const configBar = document.createElement('div');
+    configBar.style.display = 'grid';
+    configBar.style.gridTemplateColumns = '1fr 140px 110px';
+    configBar.style.gap = '8px';
+    configBar.style.alignItems = 'center';
+    configBar.style.marginBottom = '10px';
+
+    const keyInput = document.createElement('input');
+    keyInput.type = 'password';
+    keyInput.placeholder = 'מפתח OpenAI (לא נשמר בשרת)';
+    keyInput.value = localStorage.getItem('ifrs_api_key') || '';
+    keyInput.style.padding = '10px';
+    keyInput.style.borderRadius = '12px';
+    keyInput.style.border = '1px solid #d0d7e2';
+
+    const modelSelect = document.createElement('select');
+    ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo-0125'].forEach((m) => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      modelSelect.appendChild(opt);
+    });
+    modelSelect.value = localStorage.getItem('ifrs_model') || 'gpt-4o-mini';
+    modelSelect.style.padding = '10px';
+    modelSelect.style.borderRadius = '12px';
+    modelSelect.style.border = '1px solid #d0d7e2';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'שמירת מפתח';
+    saveBtn.className = 'send';
+    saveBtn.style.minWidth = 'auto';
+    saveBtn.addEventListener('click', () => {
+      if (!keyInput.value.trim()) {
+        alert('יש להזין מפתח API של OpenAI.');
+        return;
+      }
+      localStorage.setItem('ifrs_api_key', keyInput.value.trim());
+      localStorage.setItem('ifrs_model', modelSelect.value);
+      alert('נשמר בדפדפן (localStorage). הקפידו למחוק ממחשב משותף.');
+    });
+
+    configBar.append(keyInput, modelSelect, saveBtn);
+    document.querySelector('.input-row').insertAdjacentElement('beforebegin', configBar);
+
+    document.querySelectorAll('[data-prompt]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        userInput.value = btn.dataset.prompt;
+        userInput.focus();
+      });
+    });
+
+    sendBtn.addEventListener('click', handleSend);
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        handleSend();
+        e.preventDefault();
+      }
+    });
+
+    function appendMessage(text, role = 'bot') {
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      div.textContent = text;
+      transcript.appendChild(div);
+      transcript.scrollTop = transcript.scrollHeight;
+    }
+
+    const systemPrompt = `אתה עוזר לימודי IFRS/IAS לסטודנטים לחשבונאות. השב תמיד בעברית בלבד,
+בקיצור ובמבנה מחולק: 
+- תקן/פסקאות עיקריות רלוונטיות (ציין IAS/IFRS המדויק).
+- תסריט מספרי קצר (מספרים קטנים, היוון/הפחת/הפרשה לפי הצורך).
+- פקודות יומן מרכזיות (Debit/Credit) וטיפול במסים נדחים אם רלוונטי.
+- בדיקות הכרה/סיווג + אזהרות טעויות נפוצות.
+אם חסר מידע – שאל מה חסר והצע הנחות סבירות. הימנע מהמצאות סטנדרטים.`;
+
+    async function callModel(prompt) {
+      const apiKey = keyInput.value.trim() || localStorage.getItem('ifrs_api_key') || '';
+      if (!apiKey) {
+        throw new Error('לא נמצא מפתח OpenAI. הזינו למעלה ושמרו.');
+      }
+
+      const model = modelSelect.value || 'gpt-4o-mini';
+
+      const payload = {
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          {
+            role: 'user',
+            content: `${prompt}\n\nמסגרת מענה: סכם תקן רלוונטי, תן דוגמה מספרית אחת לפחות, והצג פקודות יומן עם חיוב/זיכוי.`,
+          },
+        ],
+        temperature: 0.4,
+        max_tokens: 900,
+      };
+
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(`שגיאת API (${res.status}): ${detail}`);
+      }
+
+      const data = await res.json();
+      return data?.choices?.[0]?.message?.content?.trim() || 'לא התקבלה תשובה מהמודל.';
+    }
+
+    async function handleSend() {
+      const prompt = userInput.value.trim();
+      if (!prompt) return;
+      appendMessage(prompt, 'user');
+      userInput.value = '';
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'חושב...';
+
+      try {
+        const reply = await callModel(prompt);
+        appendMessage(reply, 'bot');
+      } catch (err) {
+        appendMessage(`⚠️ שגיאה: ${err.message}\nבדקו מפתח, מודל, והרשאות רשת.`, 'bot');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'שליחה ↗';
+      }
+    }
+  </script>
+</body>
+</html>
